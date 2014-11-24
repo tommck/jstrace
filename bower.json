@@ -33,5 +33,5 @@
         "type": "git",
         "url": "git://github.com/tommck/jstrace.git"
     },
-    "private":  true
+    "private":  false
 }
