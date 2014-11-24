@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>JsTrace Test Page</title>
+</head>
+<body>
+
+    <div style="clear:both">
+        <span style="float: left">Number of Options:</span> 
+        <input style="float: left" type="number" id="numOpts" value="10"/> 
+        <button style="float: left" id="btnFact">Factorial!</button>
+        <span style="float: left" id="factResult"></span> 
+    </div>
+<!--    <div style="clear:both">
+        <span style="float: left">Max Log Size:</span> 
+        <input style="float: left" type="number" id="maxMessages" value="1000"/> 
+        <button style="float: left" id="btnSetMax">Set</button>
+    </div>
+-->
+    <div style="clear:both">
+        <button id="btnShowMessages">Show Messages</button>
+    </div>
+    <ul id="messages">
+    </ul>
+    
+<script src="Scripts/jquery-1.7.1.js" type="text/javascript"></script>
+<script src="Scripts/Trace.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+    $(function () {
+        var factTracer = new Trace('Factorial');
+        Trace.traceLevel('Factorial', Trace.Levels.log);
+        
+        var _factorials = [];
+        var _factorial = function (n) {
+            var result;
+            try {
+                factTracer.info('Calculating Factorial For:', n);
+
+                if (n === 0 || n === 1) {
+                    factTracer.log('It was 0 or 1, it is 1');
+                    result = 1;
+                }
+                else if (_factorials[n] > 0) {
+                    factTracer.log('Cached already');
+                    result = _factorials[n];
+                }
+                else {
+                    factTracer.info('Calculating New Value');
+                    result = _factorials[n] = _factorial(n - 1) * n;
+                }
+                factTracer.info('Result:', result);
+                return result;
+            }
+            catch (e) {
+                factTracer.error('Error Calculating!', e);
+                result = undefined;
+            }
+            finally {
+                return result;
+            }
+        };
+
+        $('#btnFact').click(function () {
+            var num = Number($('#numOpts').val());
+            alert(num);
+            var fact = _factorial(num);
+            $('#factResult').val(num.toString() + '! = ' + fact);
+        });
+
+        $('#btnShowMessages').click(function () {
+            var $ul = $('ul#messages');
+            $ul.html('');
+
+            Trace.setCallback(function () {
+                var args = Array.prototype.slice.apply(arguments);
+                var module = args.shift();
+                var level = args.shift();
+                var message = args.join('');
+                $ul.append($('<li></li>').text(module + ':[' + level + '] - ' + message));
+            }, true);
+
+            Trace.setCallback();
+        });
+
+    });
+</script>
+</body>
+</html>

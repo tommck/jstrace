@@ -1,0 +1,30 @@
+﻿<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>JsTrace.MVC</id>
+    <version>1.4.1</version>
+    <authors>Tom McKearney</authors>
+    <owners>Tom McKearney</owners>
+    <projectUrl>http://jstrace.codeplex.com</projectUrl>
+    <licenseUrl>http://jstrace.codeplex.com/</licenseUrl>
+    <iconUrl>http://www.mckearney.org/files/JsTrace/JsTrace.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Sets up an ASP.NET Area with a JsTraceController in order to facilitate sending JsTrace messages to the server</description>
+    <summary>An ASP.NET MVC Helper for sending JsTrace messages to the server</summary>
+    <copyright>Copyright © 2012-2014 Tom McKearney</copyright>
+    <tags>JavaScript JsTrace MVC diagnostics tracing Console JScript JS Trace Debug Debugging Debugger error logging</tags>
+    <dependencies>
+      <dependency id="JsTrace" version="1.4.1" />
+    </dependencies>
+    <releaseNotes>
+      Companion release for JsTrace 1.4.1
+    </releaseNotes>
+  </metadata>
+  <files>
+    <file src="Areas\JsTrace\Controllers\JsTraceController.cs" target="content\Areas\JsTrace\Controllers\JsTraceController.cs" />
+    <file src="Areas\JsTrace\JsTraceAreaRegistration.cs" target="content\Areas\JsTrace\JsTraceAreaRegistration.cs" />
+    <file src="Areas\JsTrace\Models\JsTraceMessage.cs" target="content\Areas\JsTrace\Models\JsTraceMessage.cs" />
+    <file src="Areas\JsTrace\HtmlHelperExtensions.cs" target="content\Areas\JsTrace\HtmlHelperExtensions.cs" />
+    <file src="Areas\JsTrace\README.txt" target="content\Areas\JsTrace\README.txt" />
+  </files>
+</package>

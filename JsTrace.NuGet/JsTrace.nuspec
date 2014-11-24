@@ -1,0 +1,27 @@
+﻿<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>JsTrace</id>
+    <version>1.4.1</version>
+    <authors>Tom McKearney, Ben Alman</authors>
+    <owners>Tom McKearney</owners>
+    <projectUrl>http://jstrace.codeplex.com</projectUrl>
+    <licenseUrl>http://jstrace.codeplex.com/</licenseUrl>
+    <iconUrl>http://www.mckearney.org/files/JsTrace/JsTrace.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>JsTrace allows you to heavily instrument your JavaScript code without flooding the console with messages. It has "Trace Levels" (off, error, warn, info, debug, log), which allow you to fine-tune what amount of trace information comes out of each area or module of your code. It additionally supports a callback function to allow further processing of Trace messages.  It is cross-browser and will gracefully degrade down to "console.log" on browsers without support for higher level methods like console.error.</description>
+    <summary>A simple pure JavaScript utility for "switched" tracing (a la System.Diagnostics.TraceSource).</summary>
+    <copyright>Copyright © 2011-2014 Tom McKearney, Copyright © 2010 "Cowboy" Ben Alman</copyright>
+    <tags>JavaScript diagnostics tracing Console JScript JS Trace Debug Debugging Debugger error logging</tags>
+    <releaseNotes>
+      Added Trace.config method for single-call configuration from the client
+      Added RequireJS/AMD support
+      Minor fix for non-browser usage
+    </releaseNotes>
+  </metadata>
+  <files>
+    <file src="..\js\Trace.js" target="content\Scripts\Trace.js" />
+    <file src="..\js\Trace.min.js" target="content\Scripts\Trace.min.js" />
+    <file src="..\js\Trace.min.js.map" target="content\Scripts\Trace.min.js.map" />
+  </files>
+</package>

@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/modernizr-2.0.6-development-only.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Trace.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Test/TestModule.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/BorisMoore-jsviews-667b56c/jquery.bindall.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/BorisMoore-jsviews-667b56c/jsrender.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/BorisMoore-jsviews-667b56c/jquery.observable.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/BorisMoore-jsviews-667b56c/jquery.views.js")" type="text/javascript"></script>
+</head>
+
+<body>
+    @RenderBody()
+
+    @Html.RenderJsTraceProxy()
+</body>
+</html>
