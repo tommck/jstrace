@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{EE62ED
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{71925250-D41F-4A20-9E8A-B97CC9D996EB}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		js\Trace.js = js\Trace.js
 		js\Trace.min.js = js\Trace.min.js
 		js\Trace.min.js.map = js\Trace.min.js.map
