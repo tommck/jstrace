@@ -1,5 +1,6 @@
 ﻿/*!
-* JsTrace - v1.4.1 - 2/11/2014
+* jsTrace - v1.5 - 11/24/2014
+* http://tommck.github.io/jstrace
 *
 * Copyright (c) 2011-2104 Tom McKearney (thomas.mckearney@appliedis.com)
 * Dual licensed under the MIT and GPL licenses.

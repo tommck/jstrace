@@ -7,8 +7,6 @@
     "use strict";
 
     var _tracer = new Trace('TestModule');
-    var _tracer2 = new Trace('TestModule');
-    var _tracer3 = new Trace('TestModule');
 
     // add to global
     global.TestModule = function () {
@@ -19,8 +17,6 @@
                         var tmpKey = key;
                         if (Trace.Levels.hasOwnProperty(tmpKey) === true) {
                             _tracer[tmpKey]('testing:', tmpKey);
-                            _tracer2[tmpKey]('testing:', tmpKey);
-                            _tracer3[tmpKey]('testing:', tmpKey);
                         }
                     }
                 }

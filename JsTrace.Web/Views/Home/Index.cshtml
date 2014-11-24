@@ -1,61 +1,59 @@
 ﻿@{
     ViewBag.Title = "JsTrace Test Index";
 }
-<h2>Testing Index</h2>
+<h2>jsTrace Testing</h2>
 
-<script id="levelsTemplate" type="text/x-jquery-tmpl">
-    <span>Selected:</span>&nbsp;&nbsp;<span data-getfrom="[selectedLevel]"></span>
-    <br/>
-    <br/>
-    <select title="select a Level!" id="levelsOptions">
-        {{#each allLevels}}
-            <option value="{{=$data}}">{{=$data}}</option>
-        {{/each}}
-    </select>
-</script>
+<div id="main">
 
-<script id="messageTemplate" type="text/x-jquery-tmpl">
-    <tr>
-        <td>{{=module}}</td>
-        <td>{{=level}}</td>
-        <td>{{=message}}</td>
-    </tr>
-</script>
+    <div id="canned" style="float: left; border: 1px solid black; padding: 2em; height: 100px">
+        <h3>Test All</h3>
+        <button data-bind="click: testAll" id="testBtn">Test All Levels</button>
+        <br />
+        <br />
+        <span>Switch Level:</span>&nbsp;&nbsp;
+        <select title="select a Level!" id="levelsOptions" data-bind="options: allLevels, value: selectedLevel"></select>
+    </div>
+    <div style="float: left; border: 1px solid black; padding: 2em; height: 100px; margin-left: 2em">
+        <h3>Custom</h3>
+        <input type=" text" placeholder="Module Name" data-bind="value: module" />
+        <input type="text" placeholder="Message" data-bind="value: message" />
+        <span>Level:</span>&nbsp;&nbsp;
+        <select title="select a Level!" data-bind="options: allLevels, value: customLevel"></select>
+        <button data-bind="click: customTrace">Trace</button>
+        <br />
+        <br/>
+        <label>NOTE: Switch will be at "log" level</label>
+    </div>
+    <div style="clear: both"></div>
+    <br />
+    <br />
+    <button data-bind="click: clearAll">Clear Messages</button>
+    <table style="width: 100%; text-align: left;">
+        <thead>
+            <tr>
+                <th style="width: 10em">
+                    Module
+                </th>
+                <th style="width: 6em">
+                    Level
+                </th>
+                <th style="width: auto">
+                    Message
+                </th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: messages">
+            <tr>
+                <td data-bind="text: module"></td>
+                <td data-bind="text: level"></td>
+                <td data-bind="text: message"></td>
+            </tr>
+        </tbody>
+    </table>
 
-<button id="testBtn">Trace Test</button>
-<button id="clearBtn">Clear</button>
-<br />
-<br />
-<div id="levels"></div>
-<br />
-<br />
-<table style="width: 100%; text-align: left;">
-    <thead>
-        <tr>
-            <th style="width: 10em">
-                Module
-            </th>
-            <th style="width: 6em">
-                Level
-            </th>
-            <th style="width: auto">
-                Message
-            </th>
-        </tr>
-    </thead>
-    <tbody id="messages">
-    </tbody>
-</table>
+</div>
 
 <script type="text/javascript">
-    var messageData = {
-        allMessages: []
-    };
-
-    var levelInfo = {
-        allLevels: [],
-        selectedLevel: ''
-    };
 
     var traceMessage = function (mod, lev, msg) {
         return {
@@ -65,59 +63,62 @@
         };
     };
 
-    var bindIt = function () {
-        $('div#messages').link(messageData, 'traceMessageTemplate');
-        $('div#levels').link(levelInfo, 'levelsTemplate');
+    var vm = {
+        messages: ko.observableArray([]),
+
+        allLevels: [],
+        selectedLevel: ko.observable(''),
+        testAll: function() {
+            var testMod = new TestModule();
+            testMod.foo();
+        },
+
+        module: ko.observable(''),
+        message: ko.observable(''),
+        customLevel: ko.observable(''),
+
+        customTrace: function () {
+            var mod = vm.module();
+            var t = new Trace(mod);
+            Trace.traceLevel(mod, Trace.Levels.log);
+
+            var message = vm.message();
+            var lvl = vm.customLevel();
+
+            t[lvl](message);
+        },
+        clearAll: function () {
+            vm.messages([])
+        }
     };
 
     $(function () {
-        Trace.traceLevel('TestModule', Trace.Levels.log);
 
-        $('#messageTemplate').template('message');
-        $('#levelsTemplate').template('levelsTemplate');
+        Trace.traceLevel('TestModule', Trace.Levels.log);
 
         // set up the levels.
         for (var key in Trace.Levels) {
             if (Trace.Levels.hasOwnProperty(key) === true) {
-                levelInfo.allLevels.push(key);
+                vm.allLevels.push(key);
             }
         }
 
         // setup the callback
-        //Trace.setCallback(function (module, level) {
-        //    // filter it 
-        //    if (Trace.shouldTrace(module, level) == true) {
-        //        var args = Array.prototype.slice.apply(arguments).slice(2);
-        //        var msg = module + ' [' + level + '] - ' + args.join(' ');
+        Trace.setCallback(function (module, level) {
+            // filter it 
+            if (Trace.shouldTrace(module, level) == true) {
+                var args = Array.prototype.slice.apply(arguments).slice(2);
+                var msg = args.join(' ');
 
-        //        var traceMsg = new traceMessage(module, level, msg);
+                var traceMsg = new traceMessage(module, level, msg);
 
-        //        var html = $.render(traceMsg, 'message');
-        //        $('#messages').append(html);
-        //    }
-        //}, true);
+                vm.messages.push(traceMsg);
+            }
+        }, true);
 
         // init value
-        levelInfo.selectedLevel = Trace.traceLevel('TestModule', true);
+        vm.selectedLevel = Trace.traceLevel('TestModule', true);
 
-        // bind it
-        bindIt();
-
-        $('select#levelsOptions').val(levelInfo.selectedLevel);
-
-        // select support sucks in jsViews right now, so...
-        $('select#levelsOptions').change(function () {
-            Trace.traceLevel('TestModule', this.value);
-            $.observable(levelInfo).setProperty({ selectedLevel: this.value });
-        });
-
-        $('button#testBtn').click(function () {
-            var testMod = new TestModule();
-            testMod.foo();
-        });
-
-        $('button#clearBtn').click(function () {
-            $('#messages').html('');
-        });
+        ko.applyBindings(vm);
     });
 </script>
