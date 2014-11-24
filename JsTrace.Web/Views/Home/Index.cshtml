@@ -22,7 +22,7 @@
         <button data-bind="click: customTrace">Trace</button>
         <br />
         <br/>
-        <label>NOTE: Switch will be at "log" level</label>
+        <label>NOTE: Switch will default to "log" level</label>
     </div>
     <div style="clear: both"></div>
     <br />
@@ -80,7 +80,6 @@
         customTrace: function () {
             var mod = vm.module();
             var t = new Trace(mod);
-            Trace.traceLevel(mod, Trace.Levels.log);
 
             var message = vm.message();
             var lvl = vm.customLevel();
@@ -94,7 +93,9 @@
 
     $(function () {
 
-        Trace.traceLevel('TestModule', Trace.Levels.log);
+        Trace.config({
+            defaultLevel: Trace.Levels.log
+        });
 
         // set up the levels.
         for (var key in Trace.Levels) {
@@ -117,7 +118,12 @@
         }, true);
 
         // init value
-        vm.selectedLevel = Trace.traceLevel('TestModule', true);
+        vm.selectedLevel(Trace.traceLevel('TestModule'));
+
+        // set the trace level when the drop-down is changed
+        vm.selectedLevel.subscribe(function (newVal) {
+            Trace.traceLevel('TestModule', newVal);
+        });
 
         ko.applyBindings(vm);
     });

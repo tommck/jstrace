@@ -178,10 +178,6 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="JsTraceTest.html" />
-    <Content Include="Scripts\BorisMoore-jsviews-667b56c\jquery.bindall.js" />
-    <Content Include="Scripts\BorisMoore-jsviews-667b56c\jquery.observable.js" />
-    <Content Include="Scripts\BorisMoore-jsviews-667b56c\jquery.views.js" />
-    <Content Include="Scripts\BorisMoore-jsviews-667b56c\jsrender.js" />
     <Content Include="Scripts\jasmine-1.1.0\jasmine-html.js" />
     <Content Include="Scripts\jasmine-1.1.0\jasmine.css" />
     <Content Include="Scripts\jasmine-1.1.0\jasmine.js" />
