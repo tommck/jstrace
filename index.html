@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="JsTrace : JavaScript Diagnostic Tracing Library">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>JsTrace</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/tommck/jstrace">View on GitHub</a>
+
+          <h1 id="project_title">JsTrace</h1>
+          <h2 id="project_tagline">JavaScript Diagnostic Tracing Library</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/tommck/jstrace/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/tommck/jstrace/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="overview" class="anchor" href="#overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overview</h1>
+
+<p><a href="https://github.com/tommck/jstrace" title="JsTrace">JsTrace</a> is a pure JavaScript library that enables you to set separate "switch levels" on various components within your JavaScript code in order to facilitate debugging without all the "noise" of debugging information you don't want to see at the moment</p>
+
+<p><strong>NOTE:</strong> This is now available as a <a href="http://nuget.org/packages/JsTrace" title="NuGet package">NuGet Package </a>too!</p>
+
+<p><strong>UPDATE:</strong> JsTrace now has a companion, JsTrace.MVC whichs allows you to proxy JsTrace messages to the web server in ASP.NET MVC. The code is here as well. (<a href="http://nuget.org/packages/JsTrace.MVC" title="NuGet Package">NuGet Package</a>)</p>
+
+<h1>
+<a id="switches" class="anchor" href="#switches" aria-hidden="true"><span class="octicon octicon-link"></span></a>Switches</h1>
+
+<p>There are six switch levels, which are (in order of least-&gt;most information):</p>
+
+<ul>
+<li>off</li>
+<li>error (default)</li>
+<li>warn</li>
+<li>info</li>
+<li>debug</li>
+<li>log</li>
+</ul>
+
+<p>Some of you may notice that these correspond directly with methods on the "console" objects supported in many browsers.</p>
+
+<p>Thanks to some magic by <a href="http://benalman.com/" title="Ben Alman">Ben Alman</a>, if your browser does not support these methods, your messages will not be ignored.</p>
+
+<h1>
+<a id="instrumenting-your-scripts" class="anchor" href="#instrumenting-your-scripts" aria-hidden="true"><span class="octicon octicon-link"></span></a>Instrumenting Your Scripts</h1>
+
+<p>To do basic instrumentation, you just declare a Trace object and use like this:</p>
+
+<pre><code>var tracer = new Trace('ModuleName');
+tracer.info('Testing tracing capabilities');
+tracer.debug('More detail about the tracing capabilities');
+tracer.log('Even MORE detail'); 
+tracer.warn('Seriously, this is too much testing!');
+tracer.error('That is it! I am done!');
+</code></pre>
+
+<p>In Chrome, by default, this code results in the following output to the Console:</p>
+
+<p><img src="http://download.codeplex.com/Download?ProjectName=jstrace&amp;DownloadId=343857" alt="error"></p>
+
+<p>If you were to set the switch to "log" level (highest setting),</p>
+
+<pre><code>Trace.setLevel('ModuleName', Trace.Levels.log);
+</code></pre>
+
+<p>You get this:</p>
+
+<p><img src="http://download.codeplex.com/Download?ProjectName=jstrace&amp;DownloadId=343859" alt="all levels of errors"></p>
+
+<h1>
+<a id="using-callbacks" class="anchor" href="#using-callbacks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using Callbacks</h1>
+
+<p>JsTrace has support for a callback method that is called upon every trace message sent, settings-be-damned.</p>
+
+<p>So, if you don't like all this fancy logging stuff and you want to go back to using alerts, you could do this:</p>
+
+<pre><code>Trace.setCallback(
+   function(module, level) { 
+      var args = Array.prototype.slice.apply(arguments).slice(2);
+      alert(module + ':[' + level + '] ' + args.join(' '));
+}, 
+true,
+0);
+</code></pre>
+
+<p>Results:</p>
+
+<p><img src="http://download.codeplex.com/Download?ProjectName=jstrace&amp;DownloadId=343861" alt="error dialog"></p>
+
+<p>You'll notice above that I passed 3 parameters to setCallback.</p>
+
+<h2>
+<a id="callback-parameters" class="anchor" href="#callback-parameters" aria-hidden="true"><span class="octicon octicon-link"></span></a>Callback Parameters</h2>
+
+<h3>
+<a id="the-callback" class="anchor" href="#the-callback" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Callback</h3>
+
+<p>a JavaScript function whose parameters are:</p>
+
+<ul>
+<li>the module name</li>
+<li>the level</li>
+<li>the message passed, followed by every other parameter passed</li>
+</ul>
+
+<h3>
+<a id="force-flag" class="anchor" href="#force-flag" aria-hidden="true"><span class="octicon octicon-link"></span></a>Force Flag</h3>
+
+<p>By default, the callback will only be invoked if the browser does not have support for console or console.log.</p>
+
+<p>if this flag is a Boolean "true", all messages will be sent to the callback, regardless of browser support</p>
+
+<h3>
+<a id="historical-message-limit" class="anchor" href="#historical-message-limit" aria-hidden="true"><span class="octicon octicon-link"></span></a>Historical Message Limit</h3>
+
+<p>Internally, the Trace library keeps a common log history in memory.</p>
+
+<p>If you do not specify a limit, your callback will be called for every message that was logged before your callback was set.</p>
+
+<p>If you do, you will receive up to "limit" number of calls for the most recent traced messages.</p>
+
+<h1>
+<a id="cool-callback-tricks" class="anchor" href="#cool-callback-tricks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cool Callback Tricks</h1>
+
+<h2>
+<a id="logging-to-your-server" class="anchor" href="#logging-to-your-server" aria-hidden="true"><span class="octicon octicon-link"></span></a>Logging To Your Server</h2>
+
+<p>If you happen to work on a developer unfriendly platform (<em>cough*iPad*cough</em>), you could set up a callback to log all messages to your server like this:</p>
+
+<pre><code>Trace.setCallback(
+   function(module, level) { 
+        var args = Array.prototype.slice.apply(arguments).slice(2);
+
+        // (Optionally) filter by module/trace level
+        if (Trace.shouldTrace(parms.module, parms.level) == true) {
+            $.ajax({
+                async: true, // fire and forget
+                type: "POST",
+                url: '/Log/jsLog',
+                data: { 
+                   module: module, 
+                   level: level, 
+                   message: args.join(' ') 
+                },
+                contentType: 'application/json',
+                dataType: 'json'
+            });
+        }
+    }, 
+    true,
+    0);
+</code></pre>
+
+<p>I've used this approach more than once to find a particularly difficult bug on the iPad</p>
+
+<h2>
+<a id="on-error-send-history-to-server" class="anchor" href="#on-error-send-history-to-server" aria-hidden="true"><span class="octicon octicon-link"></span></a>On Error: Send History To Server</h2>
+
+<pre><code>try {
+    // some code that shouldn't throw an exception
+}
+catch (err) {
+    // TODO: pop up modal "An error has occurred, 
+    // sending details to our server..."
+    var allMessages = [];
+    // get every trace message and append it to the allMessages Array
+    Trace.setCallback(function (module, level) {
+        var args = Array.prototype.slice.apply(arguments).slice(2);
+        var msg = module + ' [' + level + '] - ' + args.join(' ');
+        allMessages.push(msg);
+    },
+    true);
+
+    // remove the callback
+    Trace.setCallback();
+
+    // post this to the server
+    $.ajax({
+        async: true,
+        type: "POST",
+        url: '/Log/jsExceptionLog',
+        data: { 
+           message: 'An Unexpected Error Occurred',
+           logHistory: allMessages 
+        },
+        contentType: 'application/json',
+        dataType: 'json'
+    })
+    .complete(function () {
+        // TODO: hide the popup
+    });
+}
+</code></pre>
+
+<p>ASP.NET Devs: If you're planning on proxying JsTrace messages to the server, check out the <a href="http://nuget.org/packages/JsTrace.MVC" title="JsTrace.MVC NuGet package">JsTrace.MVC NuGet package </a>I made to make this easier</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">JsTrace maintained by <a href="https://github.com/tommck">tommck</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
