@@ -1,0 +1,28 @@
+{
+  "name": "jstrace",
+  "version": "1.5.0",
+  "homepage": "http://tommck.github.io/jstrace/",
+  "author": "Tom McKearney <thomas.mckearney@appliedis.com>",
+  "description": "a pure JavaScript library that enables you to set separate \"switch levels\" on various components within your JavaScript code in order to facilitate debugging without all the \"noise\" of debugging information you don't want to see at the moment",
+  "main": "js\\Trace.js",
+  "keywords": [
+    "JavaScript",
+    "diagnostics",
+    "tracing",
+    "Console",
+    "JScript",
+    "JS",
+    "Trace",
+    "Debug",
+    "Debugging",
+    "Debugger",
+    "error",
+    "logging"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tommck/jstrace.git"
+  },
+  "private": false
+}
